@@ -1,0 +1,119 @@
+[gd_scene load_steps=7 format=3 uid="uid://cxbhy5r44xoma"]
+
+[ext_resource type="Script" uid="uid://bkds6ri3t8sso" path="res://Script/game_manager.gd" id="1_78awf"]
+[ext_resource type="Texture2D" uid="uid://1lyglglhymby" path="res://AssetBundle/Sprites/ForestBackground.png" id="1_ibkli"]
+[ext_resource type="PackedScene" uid="uid://5t3datngys13" path="res://Player/player.tscn" id="2_qbsmt"]
+[ext_resource type="PackedScene" uid="uid://cgpskhpsfrilb" path="res://Enemy/slime.tscn" id="3_cpr0p"]
+[ext_resource type="FontFile" uid="uid://3vnx538cp25u" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="5_s0nni"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_qbsmt"]
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("spawn_timer", "score_label", "game_over")]
+y_sort_enabled = true
+script = ExtResource("1_78awf")
+slime_scene = ExtResource("3_cpr0p")
+spawn_timer = NodePath("Timer")
+score_label = NodePath("CanvasLayer/Label")
+game_over = NodePath("CanvasLayer/game_over_label")
+
+[node name="Background1" type="Sprite2D" parent="."]
+position = Vector2(-121, -1)
+texture = ExtResource("1_ibkli")
+metadata/_edit_lock_ = true
+
+[node name="Background2" type="Sprite2D" parent="."]
+position = Vector2(119, -1)
+texture = ExtResource("1_ibkli")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2.425, 2.425)
+metadata/_edit_lock_ = true
+
+[node name="Player" parent="." instance=ExtResource("2_qbsmt")]
+position = Vector2(-182, 79)
+
+[node name="boundary" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Wall_down" type="StaticBody2D" parent="boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="boundary/Wall_down"]
+position = Vector2(0, 133)
+shape = SubResource("WorldBoundaryShape2D_qbsmt")
+
+[node name="Wakk_up" type="StaticBody2D" parent="boundary"]
+position = Vector2(0, 172)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="boundary/Wakk_up"]
+position = Vector2(0, -134)
+rotation = -3.14159
+shape = SubResource("WorldBoundaryShape2D_qbsmt")
+
+[node name="Wall_left" type="StaticBody2D" parent="boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="boundary/Wall_left"]
+position = Vector2(-237, 0)
+rotation = 1.5708
+shape = SubResource("WorldBoundaryShape2D_qbsmt")
+
+[node name="Wall_right" type="StaticBody2D" parent="boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="boundary/Wall_right"]
+position = Vector2(238, -2)
+rotation = -1.5708
+shape = SubResource("WorldBoundaryShape2D_qbsmt")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 29.0
+offset_top = 21.0
+offset_right = 93.0
+offset_bottom = 44.0
+theme_override_fonts/font = ExtResource("5_s0nni")
+theme_override_font_sizes/font_size = 48
+text = "score : 0"
+
+[node name="game_over_label" type="Label" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -106.0
+offset_top = -24.5
+offset_right = 106.0
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 60
+theme_override_fonts/font = ExtResource("5_s0nni")
+theme_override_font_sizes/font_size = 120
+text = "Game Over"
+
+[node name="game_over_label2" type="Label" parent="CanvasLayer/game_over_label"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -266.0
+offset_top = 60.0
+offset_right = 291.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("5_s0nni")
+theme_override_font_sizes/font_size = 40
+text = "FristTrying"
+horizontal_alignment = 1
+
+[connection signal="timeout" from="Timer" to="." method="spawn_slime"]
